@@ -1,12 +1,16 @@
 # ptsd — Project Terminal Switcher for Claude Code Directories
 
-A zsh function that lists your recent [Claude Code](https://claude.ai/code) project directories and lets you jump into one by typing a number.
+A shell function that lists your recent [Claude Code](https://claude.ai/code) project directories and lets you jump into one by typing a number.
 
 ## How it works
 
 Claude Code stores session data in `~/.claude/projects/`. Each project directory contains JSONL files with the working directory (`cwd`) of each session. `ptsd` reads these, deduplicates by path, sorts by most recently used, and presents a numbered list.
 
 ## Installation
+
+**Requirements:** `jq` must be installed (`brew install jq`)
+
+### zsh
 
 1. Clone or download `ptsd.zsh`
 2. Add to your `~/.zshrc`:
@@ -17,7 +21,16 @@ source "/path/to/ptsd/ptsd.zsh"
 
 3. Open a new terminal (or `source ~/.zshrc`)
 
-**Requirements:** `jq` must be installed (`brew install jq`)
+### bash
+
+1. Clone or download `ptsd.bash`
+2. Add to your `~/.bashrc`:
+
+```bash
+source "/path/to/ptsd/ptsd.bash"
+```
+
+3. Open a new terminal (or `source ~/.bashrc`)
 
 ## Usage
 
