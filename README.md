@@ -8,9 +8,9 @@ Claude Code stores session data in `~/.claude/projects/`. Each project directory
 
 ## Installation
 
-**Requirements:** `jq` must be installed (`brew install jq`)
+### zsh (macOS / Linux)
 
-### zsh
+**Requirements:** `jq` (`brew install jq` or `apt install jq`)
 
 1. Clone or download `ptsd.zsh`
 2. Add to your `~/.zshrc`:
@@ -21,7 +21,9 @@ source "/path/to/ptsd/ptsd.zsh"
 
 3. Open a new terminal (or `source ~/.zshrc`)
 
-### bash
+### bash (macOS / Linux / Git Bash / WSL)
+
+**Requirements:** `jq` (`brew install jq`, `apt install jq`, or download from [jqlang.github.io](https://jqlang.github.io/jq/))
 
 1. Clone or download `ptsd.bash`
 2. Add to your `~/.bashrc`:
@@ -31,6 +33,22 @@ source "/path/to/ptsd/ptsd.bash"
 ```
 
 3. Open a new terminal (or `source ~/.bashrc`)
+
+### PowerShell (Windows)
+
+No external dependencies — uses PowerShell's built-in `ConvertFrom-Json`.
+
+1. Clone or download `ptsd.ps1`
+2. Add to your PowerShell profile (`$PROFILE`):
+
+```powershell
+. "C:\path\to\ptsd\ptsd.ps1"
+```
+
+3. Open a new terminal (or `. $PROFILE`)
+
+> If you get an execution policy error, run:
+> `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 
 ## Usage
 
