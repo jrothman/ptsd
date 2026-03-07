@@ -21,7 +21,7 @@ source "/path/to/ptsd/ptsd.zsh"
 
 3. Open a new terminal (or `source ~/.zshrc`)
 
-### bash (macOS / Linux / Git Bash / WSL)
+### bash (macOS / Linux / Git Bash / WSL) ⚠️ untested
 
 **Requirements:** `jq` (`brew install jq`, `apt install jq`, or download from [jqlang.github.io](https://jqlang.github.io/jq/))
 
@@ -34,7 +34,7 @@ source "/path/to/ptsd/ptsd.bash"
 
 3. Open a new terminal (or `source ~/.bashrc`)
 
-### PowerShell (Windows)
+### PowerShell (Windows) ⚠️ untested
 
 No external dependencies — uses PowerShell's built-in `ConvertFrom-Json`.
 
