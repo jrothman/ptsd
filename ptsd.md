@@ -44,4 +44,13 @@ done
 
 3. Ask the user: "Which project? (enter a number)"
 
-4. `cd` into the selected directory and confirm with a short message like `→ /path/to/project`.
+4. Print the selected path and a ready-to-run command to open a new Claude session there:
+
+```
+→ /path/to/project
+
+Run in your terminal:
+  cd "/path/to/project" && claude
+```
+
+Note: Claude cannot launch a nested session from within a skill, so the command must be run in the terminal directly.

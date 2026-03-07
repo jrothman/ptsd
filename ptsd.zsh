@@ -67,6 +67,11 @@ ptsd() {
     local target="${cwds[$selection]}"
     echo "→ $target"
     cd "$target"
+    echo -n "Launch Claude here? (y/n): "
+    read -r launch
+    if [[ "$launch" == "y" || "$launch" == "Y" ]]; then
+      claude
+    fi
   else
     echo "Invalid selection"
     return 1
