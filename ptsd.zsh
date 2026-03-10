@@ -50,14 +50,83 @@ ptsd() {
     return 1
   fi
 
-  # Display numbered list
+  # Parse flags: -a (alphabetical), -o (oldest first)
+  local sort_mode="newest"
+  local filter=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -a) sort_mode="alpha"; shift ;;
+      -o) sort_mode="oldest"; shift ;;
+      -h|--help)
+        echo "Usage: ptsd [-a|-o] [filter]"
+        echo "  -a  Sort alphabetically by project name"
+        echo "  -o  Sort oldest first (default: newest first)"
+        echo "  filter  Case-insensitive substring match on path"
+        return 0 ;;
+      *)  filter="$1"; shift ;;
+    esac
+  done
+
+  # Apply sort
+  case "$sort_mode" in
+    alpha)
+      # Sort by project name (basename), case-insensitive
+      local -a sorted=()
+      while IFS=$'\t' read -r _ path; do
+        [[ -n "$path" ]] && sorted+=("$path")
+      done < <(for c in "${cwds[@]}"; do printf '%s\t%s\n' "${c##*/}" "$c"; done | sort -f)
+      cwds=("${sorted[@]}")
+      ;;
+    oldest)
+      # Reverse the array (it's already newest-first)
+      local -a reversed=()
+      local j=${#cwds[@]}
+      while (( j >= 1 )); do
+        reversed+=("${cwds[$j]}")
+        (( j-- ))
+      done
+      cwds=("${reversed[@]}")
+      ;;
+  esac
+
+  # Apply filter if provided
+  local -a filtered=()
+  if [[ -n "$filter" ]]; then
+    for cwd in "${cwds[@]}"; do
+      if [[ "${cwd:l}" == *"${filter:l}"* ]]; then
+        filtered+=("$cwd")
+      fi
+    done
+    cwds=("${filtered[@]}")
+    if [[ ${#cwds[@]} -eq 0 ]]; then
+      echo "No projects matching \"$filter\"."
+      return 1
+    fi
+  fi
+
+  # Display numbered list: project name bold, path very dim on same line
   echo ""
   local i=1
   for cwd in "${cwds[@]}"; do
-    printf "  %2d) %s\n" "$i" "$cwd"
+    local name="${cwd##*/}"
+    local display_path="${cwd/#$HOME/~}"
+    printf "  %2d) \033[1m%s\033[0m  \033[2;37m%s\033[0m\n" "$i" "$name" "$display_path"
     (( i++ ))
   done
   echo ""
+
+  # If only one result, auto-select it
+  if [[ ${#cwds[@]} -eq 1 ]]; then
+    local target="${cwds[1]}"
+    echo "→ $target"
+    cd "$target"
+    echo -n "Launch Claude here? (y/n): "
+    read -r launch
+    if [[ "$launch" == "y" || "$launch" == "Y" ]]; then
+      claude
+    fi
+    return 0
+  fi
 
   # Read selection
   echo -n "Select project (1-${#cwds[@]}): "
