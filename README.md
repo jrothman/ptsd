@@ -2,9 +2,31 @@
 
 A shell function that lists your recent [Claude Code](https://claude.ai/code) project directories and lets you jump into one by typing a number.
 
-## How it works
+## Usage
 
-Claude Code stores session data in `~/.claude/projects/`. Each project directory contains JSONL files with the working directory (`cwd`) of each session. `ptsd` reads these, deduplicates by path, sorts by most recently used, and presents a numbered list.
+```
+$ ptsd
+
+   1) my-app           ~/projects/my-app
+   2) another-project   ~/projects/another-project
+   3) old-project       ~/projects/old-project
+
+Select project (1-3): 2
+→ /Users/you/projects/another-project
+Launch Claude here? (y/n):
+```
+
+Project names are shown in **bold** with paths dimmed beside them. If only one project matches, it's auto-selected.
+
+### Options
+
+```
+ptsd              # List projects, newest first
+ptsd -a           # Sort alphabetically by project name
+ptsd -o           # Sort oldest first
+ptsd myapp        # Filter by substring (case-insensitive)
+ptsd -a myapp     # Combine sort + filter
+```
 
 ## Installation
 
@@ -50,31 +72,9 @@ No external dependencies — uses PowerShell's built-in `ConvertFrom-Json`.
 > If you get an execution policy error, run:
 > `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 
-## Usage
+## How it works
 
-```
-$ ptsd
-
-   1) my-app           ~/projects/my-app
-   2) another-project   ~/projects/another-project
-   3) old-project       ~/projects/old-project
-
-Select project (1-3): 2
-→ /Users/you/projects/another-project
-Launch Claude here? (y/n):
-```
-
-Project names are shown in **bold** with paths dimmed beside them. If only one project matches, it's auto-selected.
-
-### Options
-
-```
-ptsd              # List projects, newest first
-ptsd -a           # Sort alphabetically by project name
-ptsd -o           # Sort oldest first
-ptsd myapp        # Filter by substring (case-insensitive)
-ptsd -a myapp     # Combine sort + filter
-```
+Claude Code stores session data in `~/.claude/projects/`. Each project directory contains JSONL files with the working directory (`cwd`) of each session. `ptsd` reads these, deduplicates by path, sorts by most recently used, and presents a numbered list.
 
 ## Claude Code Skill
 
