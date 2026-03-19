@@ -1,6 +1,6 @@
 # ptsd — Project Terminal Switcher for Claude Code Directories
 
-A shell function that lists your recent [Claude Code](https://claude.ai/code) project directories and lets you jump into one by typing a number.
+A shell function that lists your recent [Claude Code](https://claude.ai/code) project directories and lets you switch to one by typing a number.
 
 ## Usage
 
