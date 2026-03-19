@@ -135,13 +135,17 @@ function ptsd {
 
         # Check if it already exists
         if (Test-Path $newDir) {
-            Write-Host "Error: `"$newDir`" already exists."
-            return
+            Write-Host "`"$newDir`" already exists."
+            $switchTo = Read-Host "Switch to it? (Y/n)"
+            if ($switchTo -eq 'n' -or $switchTo -eq 'N') {
+                return
+            }
+            Set-Location $newDir
+        } else {
+            New-Item -ItemType Directory -Path $newDir -Force | Out-Null
+            Write-Host "Created: $newDir"
+            Set-Location $newDir
         }
-
-        New-Item -ItemType Directory -Path $newDir -Force | Out-Null
-        Write-Host "Created: $newDir"
-        Set-Location $newDir
         $launch = Read-Host "Launch Claude here? (Y/n)"
         if ($launch -ne 'n' -and $launch -ne 'N') {
             claude

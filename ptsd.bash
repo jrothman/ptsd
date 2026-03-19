@@ -139,13 +139,18 @@ ptsd() {
 
     # Check if it already exists
     if [[ -e "$new_dir" ]]; then
-      echo "Error: \"$new_dir\" already exists."
-      return 1
+      echo "\"$new_dir\" already exists."
+      echo -n "Switch to it? (Y/n): "
+      read -r switch_to
+      if [[ "$switch_to" == "n" || "$switch_to" == "N" ]]; then
+        return 1
+      fi
+      cd "$new_dir"
+    else
+      mkdir -p "$new_dir"
+      echo "Created: $new_dir"
+      cd "$new_dir"
     fi
-
-    mkdir -p "$new_dir"
-    echo "Created: $new_dir"
-    cd "$new_dir"
     echo -n "Launch Claude here? (Y/n): "
     read -r launch
     if [[ "$launch" != "n" && "$launch" != "N" ]]; then
