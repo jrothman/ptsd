@@ -7,13 +7,14 @@ A shell function that lists your recent [Claude Code](https://claude.ai/code) pr
 ```
 $ ptsd
 
+   0) help menu
    1) my-app           ~/projects/my-app
    2) another-project   ~/projects/another-project
    3) old-project       ~/projects/old-project
 
-Select project (1-3): 2
+Select project (0-3): 2
 → /Users/you/projects/another-project
-Launch Claude here? (y/n):
+Launch Claude here? (Y/n):
 ```
 
 Project names are shown in **bold** with paths dimmed beside them. If only one project matches, it's auto-selected.
@@ -26,6 +27,8 @@ ptsd -a           # Sort alphabetically by project name
 ptsd -o           # Sort oldest first
 ptsd myapp        # Filter by substring (case-insensitive)
 ptsd -a myapp     # Combine sort + filter
+ptsd -n           # Create a new project folder
+ptsd -n myapp     # Create a new project folder named "myapp"
 ```
 
 ## Installation
