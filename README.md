@@ -2,6 +2,8 @@
 
 A shell function that lists your recent [Claude Code](https://claude.ai/code) project directories and lets you switch to one by typing a number.
 
+![ptsd demo](ptsd_demo.jpg)
+
 ## Usage
 
 ```
