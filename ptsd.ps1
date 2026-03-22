@@ -10,6 +10,7 @@ function ptsd {
     param(
         [switch]$a,          # Sort alphabetically
         [switch]$o,          # Sort oldest first
+        [switch]$f,          # cd to parent folder
         [switch]$n,          # Create new project
         [switch]$h,          # Show help
         [Parameter(ValueFromRemainingArguments)]
@@ -18,9 +19,10 @@ function ptsd {
 
     # Show help
     if ($h) {
-        Write-Host "Usage: ptsd [-a|-o] [-n [name]] [filter]"
+        Write-Host "Usage: ptsd [-a|-o] [-f] [-n [name]] [filter]"
         Write-Host "  -a          Sort alphabetically by project name"
         Write-Host "  -o          Sort oldest first (default: newest first)"
+        Write-Host "  -f          cd to parent folder instead of project dir"
         Write-Host "  -n [name]   Create a new project folder"
         Write-Host "  filter      Case-insensitive substring match on path"
         return
@@ -201,6 +203,9 @@ function ptsd {
         return
     } elseif ($selection -match '^\d+$' -and [int]$selection -ge 1 -and [int]$selection -le $cwds.Count) {
         $target = $cwds[[int]$selection - 1]
+        if ($f) {
+            $target = Split-Path $target -Parent
+        }
         Write-Host "→ $target"
         Set-Location $target
         $launch = Read-Host "Launch Claude here? (Y/n)"

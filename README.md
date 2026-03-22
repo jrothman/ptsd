@@ -25,11 +25,12 @@ Project names are shown in **bold** with paths dimmed beside them. If only one p
 
 ```
 ptsd              # List projects, newest first
-ptsd -a           # Sort alphabetically by project name
-ptsd -o           # Sort oldest first
+ptsd -a           # Sort alphabetically by project name (--alpha)
+ptsd -o           # Sort oldest first (--oldest)
+ptsd -f           # cd to parent folder instead of project dir (--folder)
 ptsd myapp        # Filter by substring (case-insensitive)
 ptsd -a myapp     # Combine sort + filter
-ptsd -n           # Create a new project folder
+ptsd -n           # Create a new project folder (--new)
 ptsd -n myapp     # Create a new project folder named "myapp"
 ```
 

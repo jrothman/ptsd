@@ -50,15 +50,17 @@ ptsd() {
     return 1
   fi
 
-  # Parse flags: -a (alphabetical), -o (oldest first), -n (new project)
+  # Parse flags: -a (alphabetical), -o (oldest first), -n (new project), -f (cd to parent folder)
   local sort_mode="newest"
   local filter=""
   local new_project=""
   local create_new=0
+  local folder_mode=0
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -a) sort_mode="alpha"; shift ;;
-      -o) sort_mode="oldest"; shift ;;
+      -a|--alpha) sort_mode="alpha"; shift ;;
+      -o|--oldest) sort_mode="oldest"; shift ;;
+      -f|--folder) folder_mode=1; shift ;;
       -n|--new)
         create_new=1
         shift
@@ -69,9 +71,10 @@ ptsd() {
         fi
         ;;
       -h|--help)
-        echo "Usage: ptsd [-a|-o] [-n [name]] [filter]"
+        echo "Usage: ptsd [-a|-o] [-f] [-n [name]] [filter]"
         echo "  -a          Sort alphabetically by project name"
         echo "  -o          Sort oldest first (default: newest first)"
+        echo "  -f          cd to parent folder instead of project dir"
         echo "  -n [name]   Create a new project folder"
         echo "  filter      Case-insensitive substring match on path"
         return 0 ;;
@@ -217,6 +220,9 @@ ptsd() {
     return 0
   elif [[ "$selection" =~ ^[0-9]+$ ]] && (( selection >= 1 && selection <= ${#cwds[@]} )); then
     local target="${cwds[$selection]}"
+    if (( folder_mode )); then
+      target="${target%/*}"
+    fi
     echo "→ $target"
     cd "$target"
     echo -n "Launch Claude here? (Y/n): "
