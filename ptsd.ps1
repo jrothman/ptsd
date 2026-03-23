@@ -183,6 +183,19 @@ function ptsd {
         }
     }
 
+    # In folder mode, reduce to unique parent folders
+    if ($f) {
+        $folders = [System.Collections.Generic.List[string]]::new()
+        $folderSeen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($cwd in $cwds) {
+            $parent = Split-Path $cwd -Parent
+            if ($folderSeen.Add($parent)) {
+                $folders.Add($parent)
+            }
+        }
+        $cwds = $folders
+    }
+
     # Display numbered list: project name bold, path dim on same line
     Write-Host ''
     Write-Host ('   0) ') -NoNewline
@@ -196,21 +209,21 @@ function ptsd {
     }
     Write-Host ''
 
-    $selection = Read-Host "Select project (0-$($cwds.Count))"
+    $label = if ($f) { "folder" } else { "project" }
+    $selection = Read-Host "Select $label (0-$($cwds.Count))"
 
     if ($selection -eq '0') {
         ptsd -h
         return
     } elseif ($selection -match '^\d+$' -and [int]$selection -ge 1 -and [int]$selection -le $cwds.Count) {
         $target = $cwds[[int]$selection - 1]
-        if ($f) {
-            $target = Split-Path $target -Parent
-        }
         Write-Host "→ $target"
         Set-Location $target
-        $launch = Read-Host "Launch Claude here? (Y/n)"
-        if ($launch -ne 'n' -and $launch -ne 'N') {
-            claude
+        if (-not $f) {
+            $launch = Read-Host "Launch Claude here? (Y/n)"
+            if ($launch -ne 'n' -and $launch -ne 'N') {
+                claude
+            }
         }
     } else {
         Write-Host 'Invalid selection'

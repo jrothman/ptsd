@@ -200,6 +200,23 @@ ptsd() {
     fi
   fi
 
+  # In folder mode, reduce to unique parent folders
+  if (( folder_mode )); then
+    local -a folders=()
+    local -a folder_seen=()
+    for cwd in "${cwds[@]}"; do
+      local parent="${cwd%/*}"
+      local already=0
+      for fs in "${folder_seen[@]}"; do
+        [[ "$fs" == "$parent" ]] && already=1 && break
+      done
+      (( already )) && continue
+      folder_seen+=("$parent")
+      folders+=("$parent")
+    done
+    cwds=("${folders[@]}")
+  fi
+
   # Display numbered list: project name bold, path dim on same line
   echo ""
   printf "   0) \033[1;36mhelp menu\033[0m\n"
@@ -212,7 +229,9 @@ ptsd() {
   echo ""
 
   # Read selection
-  echo -n "Select project (0-${#cwds[@]}): "
+  local label="folder"
+  (( folder_mode )) || label="project"
+  echo -n "Select $label (0-${#cwds[@]}): "
   read -r selection
 
   if [[ "$selection" == "0" ]]; then
@@ -220,15 +239,14 @@ ptsd() {
     return 0
   elif [[ "$selection" =~ ^[0-9]+$ ]] && (( selection >= 1 && selection <= ${#cwds[@]} )); then
     local target="${cwds[$((selection-1))]}"
-    if (( folder_mode )); then
-      target="${target%/*}"
-    fi
     echo "→ $target"
     cd "$target"
-    echo -n "Launch Claude here? (Y/n): "
-    read -r launch
-    if [[ "$launch" != "n" && "$launch" != "N" ]]; then
-      claude
+    if (( ! folder_mode )); then
+      echo -n "Launch Claude here? (Y/n): "
+      read -r launch
+      if [[ "$launch" != "n" && "$launch" != "N" ]]; then
+        claude
+      fi
     fi
   else
     echo "Invalid selection"
